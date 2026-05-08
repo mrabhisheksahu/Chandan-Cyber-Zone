@@ -1,0 +1,28 @@
+DirectoryIndex index.php index.html
+
+RewriteEngine On
+
+# Security Headers
+<IfModule mod_headers.c>
+Header always set X-Content-Type-Options "nosniff"
+Header always set X-Frame-Options "DENY"
+Header always set X-XSS-Protection "1; mode=block"
+Header always set Referrer-Policy "strict-origin-when-cross-origin"
+</IfModule>
+
+# Block access to sensitive files
+<FilesMatch "^\.env|\.db$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# Block direct PHP execution in uploads via RewriteRule
+RewriteRule ^uploads/.*\.php$ - [F,L]
+
+# Prevent hotlinking images
+RewriteCond %{HTTP_REFERER} !^$
+RewriteCond %{HTTP_REFERER} !^https?://(www\.)?localhost [NC]
+RewriteCond %{HTTP_REFERER} !^https?://(www\.)?127.0.0.1 [NC]
+RewriteRule \.(jpg|jpeg|png|gif|svg|webp)$ - [NC,F,L]
+
+

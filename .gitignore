@@ -1,0 +1,20 @@
+# SQLite DBs
+pvc.db
+admin/pvc.db
+
+# User uploads
+uploads/
+
+# OS/editor
+.DS_Store
+Thumbs.db
+*.log
+.vscode/
+.idea/
+
+# Node/Python artifacts (if any)
+node_modules/
+dist/
+build/
+*.env
+
