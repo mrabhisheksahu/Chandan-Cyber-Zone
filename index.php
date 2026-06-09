@@ -42,6 +42,71 @@ if (isset($_SESSION['customer_id'])) {
             box-sizing: border-box;
         }
 
+        /* Mobile header collapse (hamburger toggle) */
+        .hamburger-btn {
+            display: none;
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            background: rgba(255, 255, 255, 0.08);
+            color: #fff;
+            cursor: pointer;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            box-shadow: 0 10px 18px rgba(0, 0, 0, 0.22);
+        }
+
+        .hamburger-btn .bar {
+            display: block;
+            width: 20px;
+            height: 2px;
+            background: #fff;
+            margin: 3px 0;
+            border-radius: 99px;
+            transition: 0.2s ease;
+        }
+
+        /* Default desktop/tablet: show full header */
+        .topbar-collapse {
+            display: flex;
+            width: 100%;
+        }
+
+        /* Mobile: hide header content and show hamburger */
+        @media (max-width: 767px) {
+            .hamburger-btn {
+                display: flex;
+            }
+
+            .topbar-inner {
+                flex-direction: row;
+                align-items: center;
+                justify-content: space-between;
+            }
+
+            .topbar-collapse {
+                display: none;
+            }
+
+            .topbar-open .topbar-collapse {
+                display: flex;
+            }
+
+            /* When open, make it column so content doesn't overflow */
+            .topbar-open .topbar-inner {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 10px;
+            }
+
+            .top-actions {
+                justify-content: center;
+            }
+        }
+
+
         body {
             font-family: Cambria, "Times New Roman", serif;
             background: radial-gradient(circle at top left, rgba(255, 153, 51, 0.18), transparent 28%), radial-gradient(circle at top right, rgba(19, 136, 8, 0.18), transparent 30%), linear-gradient(135deg, #061427 0%, #0a1f3d 45%, #0b2d57 100%);
@@ -644,8 +709,13 @@ if (isset($_SESSION['customer_id'])) {
 
 <body>
 
-    <div class="topbar">
-        <div class="topbar-inner">
+    <div class="topbar" id="siteTopbar">
+        <button class="hamburger-btn" type="button" id="hamburgerBtn" aria-label="Open menu" aria-expanded="false">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </button>
+        <div class="topbar-inner topbar-collapse" id="topbarContent">
             <div class="brand-wrap">
                 <div class="brand-logo">
                     <img loading="lazy" src="assets/images/Chandan.png" alt="Logo" style="width:70px; height:70px; border-radius: 16px;">
@@ -673,6 +743,34 @@ if (isset($_SESSION['customer_id'])) {
             </div>
         </div>
     </div>
+
+    <script>
+        (function () {
+            const hamburgerBtn = document.getElementById('hamburgerBtn');
+            const topbar = document.getElementById('siteTopbar');
+            if (!hamburgerBtn || !topbar) return;
+
+            hamburgerBtn.addEventListener('click', function () {
+                const isOpen = topbar.classList.toggle('topbar-open');
+                hamburgerBtn.setAttribute('aria-expanded', String(isOpen));
+            });
+
+            document.addEventListener('click', function (e) {
+                if (!topbar.classList.contains('topbar-open')) return;
+                if (!topbar.contains(e.target)) {
+                    topbar.classList.remove('topbar-open');
+                    hamburgerBtn.setAttribute('aria-expanded', 'false');
+                }
+            });
+
+            document.addEventListener('keydown', function (e) {
+                if (e.key === 'Escape' && topbar.classList.contains('topbar-open')) {
+                    topbar.classList.remove('topbar-open');
+                    hamburgerBtn.setAttribute('aria-expanded', 'false');
+                }
+            });
+        })();
+    </script>
 
     <!-------------------------------------------------------------------------------------------------------------------... -->
     <!-- Hero Start Here... -->
