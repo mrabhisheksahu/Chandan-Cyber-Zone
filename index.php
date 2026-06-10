@@ -756,7 +756,10 @@ if (isset($_SESSION['customer_id'])) {
             });
 
             document.addEventListener('click', function (e) {
+                // Close when clicking outside, but do NOT close immediately when tapping the hamburger.
                 if (!topbar.classList.contains('topbar-open')) return;
+                if (hamburgerBtn.contains(e.target)) return;
+
                 if (!topbar.contains(e.target)) {
                     topbar.classList.remove('topbar-open');
                     hamburgerBtn.setAttribute('aria-expanded', 'false');
